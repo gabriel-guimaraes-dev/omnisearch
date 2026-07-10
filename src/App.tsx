@@ -3,6 +3,7 @@ import { Header } from "./components/Header.tsx";
 import "./App.css";
 import { GameGrid } from "./components/GameGrid.tsx";
 import { useScrollFades } from '@gboue/use-scroll-fades';
+import { Toaster, toast } from 'sonner';
 
 function App() {
   //states for the search, results and loading
@@ -15,6 +16,7 @@ function App() {
     threshold: 10,
     transitionDuration: 300
   });
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     //create the Debounce using setTimeout
@@ -23,6 +25,8 @@ function App() {
       setLoading(true);
 
       try {
+        setError(null); // Reset error state before making the API call
+
         let endpoint = `https://api.rawg.io/api/games?key=${API_KEY}`;
 
         if(searchInput.trim() !== "") {
@@ -31,11 +35,21 @@ function App() {
           endpoint += `&ordering=-metacritic&page_size=40`;
         }
         const answer = await fetch(endpoint);
-        const data = await answer.json();
 
+        if(!answer.ok) {
+          throw new Error("Failed to fetch games");
+        }
+
+        const data = await answer.json();
         setGames(data.results || []);
+
       } catch (error) {
+        setError("Failed to fetch games. Please try again later.");
         console.error("Error to game search: ", error);
+
+        toast.error("Connection error. Please check your internet connection and try again.");
+        setGames([]); // Clear games on error
+
       } finally {
         setLoading(false);
       }
@@ -49,10 +63,12 @@ function App() {
     <div className="h-screen w-full bg-zinc-950 text-zinc-100 flex flex-col overflow-hidden">
       <Header searchInput={searchInput} onSearchChange={setSearchInput} />
 
+      <Toaster theme="dark" position="bottom-right" richColors />
+
       <main  ref={containerRef} 
       style={{ ...getContainerStyle() }} 
       className="flex-1 overflow-y-auto w-full max-w-7xl mx-auto px-4 py-8">
-        <GameGrid games={games} loading={loading} />
+        <GameGrid games={games} loading={loading} error={error} />
       </main>
     </div>
   );

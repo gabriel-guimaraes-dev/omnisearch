@@ -5,9 +5,10 @@ import { GameCardSkeleton } from './GameCardSkeleton';
 interface GameGridProps {
     games: Game[];
     loading: boolean;
+    error: string | null;
 }
 
-export function GameGrid({ games, loading }: GameGridProps) {
+export function GameGrid({ games, loading, error }: GameGridProps) {
     if(loading) {
         return(
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -17,6 +18,15 @@ export function GameGrid({ games, loading }: GameGridProps) {
             </div>
         );
     }  
+    if(error) {
+        return(
+            <div className="flex justify-center items-center py-20 text-center">
+                <h2 className="text-lg text-red-500 font-medium">
+                    {error}
+                </h2>
+            </div>
+        );
+    }
     if(!loading && games.length === 0){
         return(
             <div className="flex justify-center items-center py-20 text-center">
@@ -26,6 +36,7 @@ export function GameGrid({ games, loading }: GameGridProps) {
             </div>
         );
     }
+    
 
     return(
         
