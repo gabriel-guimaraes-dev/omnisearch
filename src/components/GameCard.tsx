@@ -27,7 +27,7 @@ export function GameCard({ game }: GameCardProps) {
                     />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs">
-                        Without Game Thumbnail
+                        Game Without Thumbnail
                     </div>
                 )}
             </div>

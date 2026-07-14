@@ -1,19 +1,22 @@
-import type { Game } from '../types/game';
-import { GameCard } from './GameCard';
-import { GameCardSkeleton } from './GameCardSkeleton';
+import React from 'react';
 
-interface GameGridProps {
-    games: Game[];
+export interface DataGridProps<T> {
+    items: T[];
     loading: boolean;
     error: string | null;
+    emptyMessage?: string;
+    renderItem: (item: T) => React.ReactNode;
+    skeletonTemplate: React.ReactNode;
 }
 
-export function GameGrid({ games, loading, error }: GameGridProps) {
+export function DataGrid<T>({ items, loading, error, renderItem, skeletonTemplate }: DataGridProps<T>) {
     if(loading) {
         return(
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {[...Array(8)].map((_, index) => (
-                    <GameCardSkeleton key={index} />
+                {Array.from({ length: 8 }).map((_, index) => (
+                    <React.Fragment key={index}>
+                        {skeletonTemplate}
+                    </React.Fragment>
                 ))}
             </div>
         );
@@ -27,7 +30,7 @@ export function GameGrid({ games, loading, error }: GameGridProps) {
             </div>
         );
     }
-    if(!loading && games.length === 0){
+    if(!loading && items.length === 0){
         return(
             <div className="flex justify-center items-center py-20 text-center">
                 <h2 className="text-lg text-zinc-500 font-medium">
@@ -41,8 +44,10 @@ export function GameGrid({ games, loading, error }: GameGridProps) {
     return(
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {games.map((game) => (
-                <GameCard key={game.id} game={game} />
+            {items.map((item, index) => (
+                <React.Fragment key={index}>
+                    {renderItem(item)}
+                </React.Fragment>
             ))}
         </div>
     )
