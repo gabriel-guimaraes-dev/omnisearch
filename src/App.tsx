@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header } from "./components/Header.tsx";
 import "./App.css";
 import { DataGrid } from "./components/DataGrid.tsx";
@@ -20,18 +20,20 @@ function App() {
   const TMDB_API_KEY = "f9cd4b67e2b047bc325102ec510fb19f"; 
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'games' | 'movies'>('games');
+  const [page, setPage] = useState(1);
+  const observerTarget = useRef<HTMLDivElement | null>(null);
   const { containerRef, getContainerStyle } = useScrollFades({
     fadeSize: 40,
     threshold: 10,
     transitionDuration: 300
   });
   
-
+  // useEffect to handle the search input and fetch data from the APIs and Debounce the search input to avoid too many API calls
   useEffect(() => {
+    setLoading(true);
+    
     //create the Debounce using setTimeout
     const loadingTime = setTimeout(async () => {
-
-      setLoading(true);
 
       try {
         setError(null); // Reset error state before making the API call
@@ -39,8 +41,8 @@ function App() {
 
         if(activeTab === 'games') {
           endpoint = searchInput.trim() !== '' 
-          ? `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchInput}`
-          : `https://api.rawg.io/api/games?key=${API_KEY}&ordering=-metacritic&page_size=40`;
+          ? `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchInput}&page=${page}`
+          : `https://api.rawg.io/api/games?key=${API_KEY}&ordering=-metacritic&page=${page}`;
           const gameAnswer = await fetch(endpoint);
 
           if(!gameAnswer.ok) {
@@ -48,11 +50,15 @@ function App() {
           }
 
           const gameData = await gameAnswer.json();
-          setGames(gameData.results || []);
+          setGames((prev) => {
+          if (page === 1) return gameData.results || [];
+          return [...prev, ...(gameData.results || [])];
+          });
+          
         } else {
           endpoint = searchInput.trim() !== ''
-          ? `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${searchInput}`
-          : `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}`;
+          ? `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${searchInput}&page=${page}`
+          : `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&page=${page}`;
           const movieAnswer = await fetch(endpoint);
 
           if(!movieAnswer.ok) {
@@ -60,7 +66,11 @@ function App() {
           }
 
           const movieData = await movieAnswer.json();
-          setMovies(movieData.results || []);
+          setMovies((prev) => {
+            if (page === 1) return movieData.results || [];
+            return [...prev, ...(movieData.results || [])];
+          });
+
         }
       } catch (error) {
         setError("Failed to fetch data. Please try again later.");
@@ -76,7 +86,34 @@ function App() {
 
     //if the user type any other word before 500ms React cancel the setTimeout
     return () => clearTimeout(loadingTime);
-  }, [searchInput, activeTab]); //useEffect start whenever the searchInput change
+  }, [searchInput, activeTab, page]); //useEffect start whenever the searchInput change
+
+  //useEffect to reset the page number when the search input or active tab changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchInput, activeTab]);
+
+  //useEffect to handle infinite scrolling
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [loading]);
         
   return (
     <div className="h-screen w-full bg-zinc-950 text-zinc-100 flex flex-col overflow-hidden">
@@ -110,6 +147,7 @@ function App() {
           renderItem={(movie) => <MovieCard key={movie.id} movie={movie} />}
           />
           )}
+        <div ref={observerTarget} className="h-10 w-full"></div>
       </main>
     </div>
   );
