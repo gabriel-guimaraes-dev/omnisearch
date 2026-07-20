@@ -21,6 +21,6 @@ export interface Game {
     rating: number;
     metacritic: number | null;
     released: string;
-    parent_platform: ParentPlatform[];
+    parent_platforms: ParentPlatform[];
     genres: Genre[];
 }

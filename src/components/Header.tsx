@@ -1,12 +1,15 @@
 // HEADERBAR WITH THE NAME OF THE PAGE
+import { useSearchParams } from "react-router-dom";
+
 type searchProps = {
   searchInput: string,
   onSearchChange: (newSearch: string) => void,
-  activeTab: 'games' | 'movies',
-  setActiveTab: (tab: 'games' | 'movies') => void,
 };
 
-export function Header(props: searchProps) {
+export function Header({ searchInput, onSearchChange }: searchProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') === 'movies' ? 'movies' : 'games';
+
   const headerStyle = `
     flex 
     flex-col
@@ -40,30 +43,36 @@ export function Header(props: searchProps) {
       md:w-96
     `;
 
+    const handleTabChange = (newTab: 'games' | 'movies') => {
+        setSearchParams({ tab: newTab });
+      }
+
   return (
     <div className={headerStyle}>
       <div>
         <h1>Omnisearch</h1>
       </div>
 
+      {/* Search input */}
       <div>
         <input
           type="text"
-          value={props.searchInput}
-          onChange={(e) => props.onSearchChange(e.target.value)}
+          value={searchInput}
+          onChange={(e) => onSearchChange(e.target.value)}
           className={inputStyle}
-          placeholder={props.activeTab === 'games' ? 'Search for games...' : 'Search for movies...'}
+          placeholder={activeTab === 'games' ? 'Search for games...' : 'Search for movies...'}
         />
       </div>
 
+      {/* Tabs for switching between games and movies */}
       <div className="flex gap-2 w-full justify-center md:w-auto">
         <button type="button" 
         onClick={() => {
-          props.setActiveTab('games');
-          props.onSearchChange(''); // Clear the search input when switching tabs
+          handleTabChange('games');
+          onSearchChange(''); // Clear the search input when switching tabs
         }}
         className={`px-4 py-2 rounded-lg transition-colors duration-300 font-medium 
-          ${props.activeTab === 'games' 
+          ${activeTab === 'games' 
         ? 'bg-zinc-400 hover:bg-zinc-300 text-white' 
         : 'bg-transparent text-zinc-400 hover:text-zinc-100'}`}>
           Games
@@ -71,11 +80,11 @@ export function Header(props: searchProps) {
 
         <button type="button" 
         onClick={() => {
-          props.setActiveTab('movies');
-          props.onSearchChange(''); // Clear the search input when switching tabs
+          handleTabChange('movies');
+          onSearchChange(''); // Clear the search input when switching tabs
         }} 
-      className={`px-4 py-2 rounded-lg transition-colors duration-300 font-medium 
-          ${props.activeTab === 'movies' 
+        className={`px-4 py-2 rounded-lg transition-colors duration-300 font-medium 
+          ${activeTab === 'movies' 
         ? 'bg-zinc-400 hover:bg-zinc-300 text-white' 
         : 'bg-transparent text-zinc-400 hover:text-zinc-100'}`}>
           Series & Movies
