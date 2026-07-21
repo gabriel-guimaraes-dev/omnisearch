@@ -1,5 +1,6 @@
 // HEADERBAR WITH THE NAME OF THE PAGE
 import { useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type searchProps = {
   searchInput: string,
@@ -66,24 +67,35 @@ export function Header({ searchInput, onSearchChange }: searchProps) {
 
       {/* Tabs for switching between games and movies */}
       <div className="flex gap-2 w-full justify-center md:w-auto">
+
+        {/* Favorites tab */}
+        <Link to="/favorites" className="px-4 py-2 rounded-lg transition-colors duration-300 font-medium 
+        ${activeTab === 'favorites' 
+        ? 'bg-zinc-400 hover:bg-zinc-300 text-white' 
+        : 'bg-transparent text-zinc-400 hover:text-zinc-100'}">
+          Favorites
+        </Link>
+
+        {/* Games tab */}
         <button type="button" 
         onClick={() => {
           handleTabChange('games');
           onSearchChange(''); // Clear the search input when switching tabs
         }}
-        className={`px-4 py-2 rounded-lg transition-colors duration-300 font-medium 
+        className={`px-4 py-2 cursor-pointer rounded-lg transition-colors duration-300 font-medium
           ${activeTab === 'games' 
         ? 'bg-zinc-400 hover:bg-zinc-300 text-white' 
         : 'bg-transparent text-zinc-400 hover:text-zinc-100'}`}>
           Games
         </button>
 
+        {/* Movies tab */}
         <button type="button" 
         onClick={() => {
           handleTabChange('movies');
           onSearchChange(''); // Clear the search input when switching tabs
         }} 
-        className={`px-4 py-2 rounded-lg transition-colors duration-300 font-medium 
+        className={`px-4 py-2 cursor-pointer rounded-lg transition-colors duration-300 font-medium 
           ${activeTab === 'movies' 
         ? 'bg-zinc-400 hover:bg-zinc-300 text-white' 
         : 'bg-transparent text-zinc-400 hover:text-zinc-100'}`}>
