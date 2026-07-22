@@ -12,6 +12,7 @@ import type { Game } from "../types/game";
 import type { Movie } from "../types/movie";
 import { MovieCard } from "../components/MovieCard";
 import { MovieCardSkeleton } from "../components/MovieCardSkeleton";
+import { useTitle } from "../hooks/useTitle";
 
 export function Home () {
   //states for the search, results and loading
@@ -176,6 +177,8 @@ export function Home () {
       });
     }
   }, []);
+
+  useTitle("Omnisearch | Search for games and movies");
         
   return (
     <div className="h-screen w-full bg-zinc-950 text-zinc-100 flex flex-col overflow-hidden">

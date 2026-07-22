@@ -3,6 +3,7 @@ import { Home } from "./pages/Home";
 import { GameDetails } from "./pages/GameDetails";
 import { MovieDetails } from "./pages/MovieDetails";
 import  Favorites  from "./pages/Favorites";
+import { NotFound } from "./pages/NotFound";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/game/:id" element={<GameDetails />} />
       <Route path="/movie/:id" element={<MovieDetails />} />
       <Route path="/favorites" element={<Favorites />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

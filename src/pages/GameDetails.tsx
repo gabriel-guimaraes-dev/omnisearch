@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Game } from "../types/game";
+import { useTitle } from "../hooks/useTitle";
 
 export function GameDetails() {
     const { id } = useParams();
@@ -10,6 +11,8 @@ export function GameDetails() {
     const [error, setError] = useState<string | null>(null);
     const API_KEY = "0666540acfe74781948f594def71d327";
     const navigate = useNavigate();
+
+    useTitle(`Omnisearch | ${game?.name}`);
 
     useEffect(() => {
         async function fetchGame() {            

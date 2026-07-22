@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Movie } from "../types/movie";
+import { useTitle } from "../hooks/useTitle";
 
 export function MovieDetails() {
     const { id } = useParams();
@@ -10,6 +11,8 @@ export function MovieDetails() {
     const [error, setError] = useState<string | null>(null);
     const TMDB_API_KEY = "f9cd4b67e2b047bc325102ec510fb19f";
     const navigate = useNavigate();
+
+    useTitle(`Omnisearch: | ${movie?.title}`);
 
     useEffect(() => {
         async function fetchMovie() {

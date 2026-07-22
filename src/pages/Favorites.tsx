@@ -2,10 +2,13 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { GameCard } from '../components/GameCard';
 import { MovieCard } from '../components/MovieCard';
 import { Link } from 'react-router-dom';
+import { useTitle } from '../hooks/useTitle';
 
 export default function Favorites() {
     const {FavoritesGames, FavoritesMovies} = useFavorites();
     const isListEmpty = FavoritesGames.length === 0 && FavoritesMovies.length === 0;
+
+    useTitle("Omnisearch | Favorites");
 
     return (
         // create a page with a header and a grid of games and movies
