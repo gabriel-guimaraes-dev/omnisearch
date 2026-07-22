@@ -4,6 +4,7 @@ import { MovieCard } from '../components/MovieCard';
 import { Link } from 'react-router-dom';
 import { useTitle } from '../hooks/useTitle';
 
+// Define the Favorites component
 export default function Favorites() {
     const {FavoritesGames, FavoritesMovies} = useFavorites();
     const isListEmpty = FavoritesGames.length === 0 && FavoritesMovies.length === 0;
@@ -14,10 +15,10 @@ export default function Favorites() {
         // create a page with a header and a grid of games and movies
         <div className="min-h-screen bg-zinc-950 text-zinc-100">
             <header className="flex items-center px-8 py-4 bg-zinc-900 border-b border-zinc-800">
-                <Link to="/" className="text-xl font-bold text-white hover:text-zinc-300 transition-colors">
-                    Ominisearch
+                <Link to="/" className="mr-16 md:mr-28 text-xl font-bold text-white hover:text-zinc-300 transition-colors">
+                    <img src="/logo.png" alt="Omnisearch logo" className="h-10 w-auto object-contain shrink-0 origin-left scale-[2] md:scale-[2.5]" />
                 </Link>
-                <span className="ml-4 text-sm text-zinc-400 font-medium border-l border-zinc-700 pl-4">
+                <span className="text-sm text-zinc-400 font-medium border-l border-zinc-700 pl-4">
                     Favorites
                 </span>
             </header>

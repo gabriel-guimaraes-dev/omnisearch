@@ -2,6 +2,7 @@ import type { Movie } from '../types/movie';
 import { Link } from 'react-router-dom';
 import { useFavorites } from '../contexts/FavoritesContext';
 
+// Define the MovieCard component
 interface MovieCardProps {
     movie: Movie;
 }

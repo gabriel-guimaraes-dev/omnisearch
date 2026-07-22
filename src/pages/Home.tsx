@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useSessionCache } from "../useSessionCache";
 import { Header } from "../components/Header";
-import "../App.css";
 import { DataGrid } from "../components/DataGrid";
 import { useScrollFades } from '@gboue/use-scroll-fades';
 import { Toaster, toast } from 'sonner';
@@ -14,8 +13,9 @@ import { MovieCard } from "../components/MovieCard";
 import { MovieCardSkeleton } from "../components/MovieCardSkeleton";
 import { useTitle } from "../hooks/useTitle";
 
+// Define the Home component
 export function Home () {
-  //states for the search, results and loading
+  //states for the search, results and loading 
   const [searchInput, setSearchInput] = useState("");
   const [games, setGames] = useSessionCache<Game[]>('cachedGames', []);
   const [movies, setMovies] = useSessionCache<Movie[]>('cachedMovies', []);
@@ -44,17 +44,17 @@ export function Home () {
   
   // useEffect to handle the search input and fetch data from the APIs and Debounce the search input to avoid too many API calls
   useEffect(() => {
-    const isRealUserAction = prevSearch.current !== searchInput || prevPage.current !== page;
+    const isRealUserAction = prevSearch.current !== searchInput || prevPage.current !== page; // Check if the search input or page number has changed
 
-    prevSearch.current = searchInput;
-    prevPage.current = page;
+    prevSearch.current = searchInput; // Update the previous search input
+    prevPage.current = page;// Update the previous page number
 
     if(!isRealUserAction) {
       if((activeTab === 'games' && games.length > 0) || (activeTab === 'movies' && movies.length > 0)) {
         setLoading(false);
         return;
       }
-    }
+    } // If the search input or page number has not changed, do not fetch data
 
     setLoading(true);
     
@@ -69,6 +69,7 @@ export function Home () {
           endpoint = searchInput.trim() !== '' 
           ? `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchInput}&page=${page}`
           : `https://api.rawg.io/api/games?key=${API_KEY}&ordering=-metacritic&page=${page}`;
+
           const gameAnswer = await fetch(endpoint);
 
           if(!gameAnswer.ok) {
@@ -79,17 +80,18 @@ export function Home () {
 
           if (gameData.results?.length === 0) {
             setHasMore(false);
-          }
+          } 
 
           setGames((prev) => {
           if (page === 1) return gameData.results || [];
           return [...prev, ...(gameData.results || [])];
-          });
+          }); 
           
         } else {
           endpoint = searchInput.trim() !== ''
           ? `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${searchInput}&page=${page}`
           : `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&page=${page}`;
+
           const movieAnswer = await fetch(endpoint);
 
           if(!movieAnswer.ok) {
@@ -131,11 +133,11 @@ export function Home () {
     }
     prevTab.current = activeTab;  
 
-    setPage(1);
-    setGames([]);
-    setMovies([]);
-    setHasMore(true);
-    document.getElementById('main-scroll')?.scrollTo(0, 0);
+    setPage(1); // Reset the page number to 1
+    setGames([]); // Reset the games array
+    setMovies([]); // Reset the movies array
+    setHasMore(true); 
+    document.getElementById('main-scroll')?.scrollTo(0, 0); // Scroll to the top of the page
   }, [activeTab]);
 
   const blockObserver = useRef(true);
@@ -153,7 +155,7 @@ export function Home () {
         }
       },
       { threshold: 1.0 }
-    );
+    ); // Create an IntersectionObserver to observe the intersection of the observerTarget with the threshold of 1.0
 
     if (observerTarget.current) {
       observer.observe(observerTarget.current);
@@ -166,6 +168,7 @@ export function Home () {
     };
   }, [loading]);
 
+  // useLayoutEffect to handle the scroll position
   useLayoutEffect(() => {
     const scrollContainer = document.getElementById('main-scroll');
     const savedScroll = sessionStorage.getItem('scrollPos');
@@ -175,7 +178,7 @@ export function Home () {
         top: parseInt(savedScroll),
         behavior: 'instant'
       });
-    }
+    } 
   }, []);
 
   useTitle("Omnisearch | Search for games and movies");
@@ -185,9 +188,9 @@ export function Home () {
       <Header 
       searchInput={searchInput} 
       onSearchChange={setSearchInput} 
-      />
+      /> {/* Header component */}
 
-      <Toaster theme="dark" position="bottom-right" richColors />
+      <Toaster theme="dark" position="bottom-right" richColors /> {/* Toaster component */}
 
       {/* control with page is active and the content*/}
       <main 
@@ -197,7 +200,6 @@ export function Home () {
       className="flex-1 overflow-y-auto w-full max-w-7xl mx-auto px-4 py-8"
       onScroll={(e) => sessionStorage.setItem('scrollPos', e.currentTarget.scrollTop.toString())}>
         {activeTab === 'games' ? (
-
           <DataGrid
           items={games} 
           loading={loading} 

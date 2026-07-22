@@ -3,6 +3,7 @@ import type { Game } from "../types/game";
 import type { Movie } from "../types/movie";
 import React from "react";
 
+// Define the FavoritesContextData interface
 interface FavoritesContextData {
     FavoritesGames: Game[];
     FavoritesMovies: Movie[];
@@ -14,8 +15,9 @@ interface FavoritesContextData {
     removeFavoriteMovie: (movie: Movie) => void;
 }
 
-const FavoritesContext = createContext<FavoritesContextData | undefined>(undefined);
+const FavoritesContext = createContext<FavoritesContextData | undefined>(undefined); // Create a context using the createContext function   
 
+// Define the FavoritesContextProvider component
 export function FavoritesContextProvider ({children}: {children: React.ReactNode}) {
     const [FavoritesGames, setFavoritesGames] = useState<Game[]>(() => {
        const storedGames = localStorage.getItem('omnisearch-fav-games');
@@ -71,6 +73,7 @@ export function FavoritesContextProvider ({children}: {children: React.ReactNode
         localStorage.setItem('omnisearch-fav-movies', JSON.stringify(FavoritesMovies));
     }, [FavoritesMovies]);
 
+    // Return the FavoritesContext.Provider component
     return (
         <FavoritesContext.Provider value={{
             FavoritesGames,
@@ -87,6 +90,7 @@ export function FavoritesContextProvider ({children}: {children: React.ReactNode
     );
 }
 
+// Define the useFavorites hook
 export function useFavorites() {
     const context = React.useContext(FavoritesContext);
     if(!context) {

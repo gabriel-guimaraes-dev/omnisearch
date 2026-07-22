@@ -1,3 +1,4 @@
+// Define the shape of a movie object
 export interface Movie {
     id: number;
     title: string;

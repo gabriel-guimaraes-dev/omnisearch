@@ -1,4 +1,6 @@
 export function GameCardSkeleton() {
+
+    // Return a skeleton component for a game card
     return (
         <article className="group relative flex flex-col rounded-md border border-zinc-800 bg-zinc-900 p-4 shadow-sm animate-pulse h-full">
             {/* cover image */}

@@ -2,11 +2,13 @@
 import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+// Define the Header component
 type searchProps = {
   searchInput: string,
   onSearchChange: (newSearch: string) => void,
 };
 
+// Define the Header component
 export function Header({ searchInput, onSearchChange }: searchProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') === 'movies' ? 'movies' : 'games';
@@ -44,15 +46,14 @@ export function Header({ searchInput, onSearchChange }: searchProps) {
       md:w-96
     `;
 
+    // Handle tab change
     const handleTabChange = (newTab: 'games' | 'movies') => {
         setSearchParams({ tab: newTab });
       }
 
   return (
     <div className={headerStyle}>
-      <div>
-        <h1>Omnisearch</h1>
-      </div>
+      <img src="/logo.png" alt="Omnisearch logo" className="h-10 w-auto object-contain origin-center md:origin-left shrink-0  scale-[2] md:scale-[2.5]"/>
 
       {/* Search input */}
       <div>

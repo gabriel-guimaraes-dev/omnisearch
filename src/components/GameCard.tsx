@@ -2,10 +2,12 @@ import type { Game } from '../types/game';
 import { Link } from 'react-router-dom';
 import {  useFavorites } from '../contexts/FavoritesContext';
 
+// Define the GameCard component
 interface GameCardProps {
     game: Game;
 }
 
+// Define the GameCard component
 export function GameCard({ game }: GameCardProps) {
     // get the year of the release date
     const releaseYear = game.released

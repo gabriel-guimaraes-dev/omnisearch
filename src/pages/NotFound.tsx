@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+// Define the NotFound component
 export function NotFound() {
     return (
         <div className="flex flex-col items-center justify-center gap-4 p-4 min-h-screen bg-zinc-950 text-zinc-100">

@@ -1,6 +1,6 @@
 import React from 'react';
 
-
+// Define the DataGrid component
 export interface DataGridProps<T> {
     items: T[];
     loading: boolean;
@@ -10,6 +10,7 @@ export interface DataGridProps<T> {
     skeletonTemplate: React.ReactNode;
 }
 
+// Define the DataGrid component
 export function DataGrid<T>({ items, loading, error, renderItem, skeletonTemplate, emptyMessage }: DataGridProps<T>) {
     {/* if there is an error, display it */}
     if(error) {

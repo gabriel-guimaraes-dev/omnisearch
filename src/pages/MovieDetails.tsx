@@ -3,17 +3,18 @@ import { useEffect, useState } from "react";
 import type { Movie } from "../types/movie";
 import { useTitle } from "../hooks/useTitle";
 
+// Define the MovieDetails component
 export function MovieDetails() {
-    const { id } = useParams();
-
-    const [movie, setMovie] = useState<Movie | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { id } = useParams(); // Use the useParams hook to get the movie ID from the URL
+    const [movie, setMovie] = useState<Movie | null>(null); // State to store the movie data
+    const [loading, setLoading] = useState(true); // State to indicate if the movie data is loading
+    const [error, setError] = useState<string | null>(null); // State to store any error message
     const TMDB_API_KEY = "f9cd4b67e2b047bc325102ec510fb19f";
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Use the useNavigate hook to navigate to the previous page
 
     useTitle(`Omnisearch: | ${movie?.title}`);
 
+    // Fetch the movie data from the TMDB API
     useEffect(() => {
         async function fetchMovie() {
             try {
@@ -68,6 +69,7 @@ export function MovieDetails() {
         return 'bg-red-500/10 text-red-400 border-red-500/20';
     };
 
+    // Find the trailer video from the movie data
     const trailer = movie.videos?.results?.find(
         (vid: any) => vid.type === 'Trailer' && vid.site === 'YouTube'
     );
@@ -79,14 +81,15 @@ export function MovieDetails() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 12l7.5 7.5L15.75 6" />
                 </svg>
-            </button>
+            </button> {/* Return to the previous page button */}
 
             <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={`Movie cover of ${movie.title}`}
                 className="w-full max-w-4xl h-96 object-cover rounded-2xl shadow-xl"
-            />
+            /> {/* Movie cover image */}
 
+            {/* Movie title, vote average, release year and trailer */}
             <div className="w-full max-w-4xl p-4 mt-6">
                 <h1 className="text-5xl font-bold text-zinc-100">{movie.title}</h1>
                 <p className="text-lg text-zinc-500">

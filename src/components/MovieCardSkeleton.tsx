@@ -1,4 +1,5 @@
 export function MovieCardSkeleton() {
+    // Return a skeleton component for a movie card
     return (
         <article className="bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden shadow-lg flex flex-col h-full group animate-pulse">
             {/* cover image */}
