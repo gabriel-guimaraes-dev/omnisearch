@@ -100,7 +100,7 @@ export function Header({ searchInput, onSearchChange }: searchProps) {
           ${activeTab === 'movies' 
         ? 'bg-zinc-400 hover:bg-zinc-300 text-white' 
         : 'bg-transparent text-zinc-400 hover:text-zinc-100'}`}>
-          Series & Movies
+          Movies
         </button>
       </div>
     </div>
