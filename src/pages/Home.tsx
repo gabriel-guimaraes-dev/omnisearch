@@ -64,9 +64,11 @@ export function Home () {
       try {
         setError(null); // Reset error state before making the API call
         let endpoint = '';
+        const safeQuery = encodeURIComponent(searchInput.trim());
+
 
         if(activeTab === 'games') {
-          endpoint = searchInput.trim() !== '' 
+          endpoint = safeQuery !== '' 
           ? `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchInput}&page=${page}`
           : `https://api.rawg.io/api/games?key=${API_KEY}&ordering=-metacritic&page=${page}`;
 
@@ -88,7 +90,7 @@ export function Home () {
           }); 
           
         } else {
-          endpoint = searchInput.trim() !== ''
+          endpoint = safeQuery !== ''
           ? `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${searchInput}&page=${page}`
           : `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&page=${page}`;
 
@@ -182,12 +184,19 @@ export function Home () {
   }, []);
 
   useTitle("Omnisearch | Search for games and movies");
+
+  const handleSearchChange = (newText: string) => {
+    setSearchInput(newText);
+    setPage(1);
+    setHasMore(true);
+    document.getElementById('main-scroll')?.scrollTo({ top: 0, behavior: 'instant' });
+  };
         
   return (
     <div className="h-screen w-full bg-zinc-950 text-zinc-100 flex flex-col overflow-hidden">
       <Header 
       searchInput={searchInput} 
-      onSearchChange={setSearchInput} 
+      onSearchChange={handleSearchChange}
       /> {/* Header component */}
 
       <Toaster theme="dark" position="bottom-right" richColors /> {/* Toaster component */}
